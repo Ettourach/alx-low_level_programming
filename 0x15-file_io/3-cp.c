@@ -1,3 +1,4 @@
+#include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -13,12 +14,6 @@ void error_exit(int exit_code, char *msg)
 dprintf(STDERR_FILENO, "%s\n", msg);
 exit(exit_code);
 }
-/**
-* main - Program entry point
-* @argc: Argument count
-* @argv: Argument vector
-* Return: 0 on success, 97, 98, 99, or 100 on failure
-*/
 int main(int argc, char **argv)
 {
 int fd_from, fd_to, r, w;
@@ -34,15 +29,15 @@ error_exit(99, "Error: Can't write to file");
 while ((r = read(fd_from, buf, BUFSIZE)) > 0)
 {
 w = write(fd_to, buf, r);
-if (w != r || w == -1)
-error_exit(99, "Error: Can't write to file");
+if (w == -1 || w != r)
+error_exit(99, "Error: Write error to file");
 }
 if (r == -1)
-error_exit(98, "Error: Can't read from file");
+error_exit(98, "Error: Read error from file");
 if (close(fd_from) == -1)
-error_exit(100, "Error: Can't close fd");
+error_exit(100, "Error: Can't close file descriptor");
 if (close(fd_to) == -1)
-error_exit(100, "Error: Can't close fd");
+error_exit(100, "Error: Can't close file descriptor");
 return (0);
 }
 
